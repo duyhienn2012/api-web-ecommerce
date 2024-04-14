@@ -1,0 +1,57 @@
+version: '3.7'
+services:
+  mysql8-container:
+    container_name: mysql8-container
+    image: mysql:8.2.0    
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: apiweb
+    ports:
+      - 3307:3306
+    networks:
+      - apiweb-network  
+
+  redis-container:
+    image: docker.io/redis:7.2.3
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379" 
+    volumes:
+      - ./redis-data:/data 
+    networks:
+      - apiweb-network
+
+  apiweb-container:    
+    container_name: apiweb-container    
+    build:
+      context: .
+      dockerfile: Dockerfile         
+    ports:
+      - 8099:8088
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql8-container:3306/apiweb?serverTimezone=UTC&allowPublicKeyRetrieval=true            
+      MYSQL_ROOT_PASSWORD: root
+      REDIS_HOST: redis-container
+      REDIS_PORT: 6379
+      KAFKA_BROKER_SERVER: kafka-broker-01      
+      KAFKA_BROKER_PORT: 19092
+    depends_on:      
+      - mysql8-container
+    networks:
+      - apiweb-network    
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8088/api/v1/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s #20s after container created, health check     
+
+networks:
+  apiweb-network:
+    name: apiweb-network
+    driver: bridge
+
+
+
