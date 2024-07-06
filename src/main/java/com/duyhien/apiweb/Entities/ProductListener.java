@@ -1,6 +1,6 @@
 package com.duyhien.apiweb.Entities;
 
-import com.duyhien.apiweb.Services.product.IProductRedisService;
+import com.duyhien.apiweb.Services.IProductRedisService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

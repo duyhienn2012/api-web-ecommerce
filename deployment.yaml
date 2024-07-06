@@ -13,7 +13,7 @@ services:
       - apiweb-network  
 
   redis-container:
-    image: docker.io/redis:7.2.3
+    image: redis:7.2.3
     container_name: redis-container
     restart: always
     ports:

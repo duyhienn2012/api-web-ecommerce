@@ -2,15 +2,16 @@ package com.duyhien.apiweb.Controllers;
 
 import com.duyhien.apiweb.Components.LocalizationUtils;
 import com.duyhien.apiweb.Components.SecurityUtils;
-import com.duyhien.apiweb.DTO.ProductDTO;
-import com.duyhien.apiweb.DTO.ProductImageDTO;
+import com.duyhien.apiweb.DTO.Request.ProductDTO;
+import com.duyhien.apiweb.DTO.Request.ProductImageDTO;
 import com.duyhien.apiweb.Entities.ProductEntity;
 import com.duyhien.apiweb.Entities.ProductImageEntity;
+import com.duyhien.apiweb.Exceptions.InvalidParamException;
 import com.duyhien.apiweb.Responses.ResponseObject;
 import com.duyhien.apiweb.Responses.product.ProductListResponse;
 import com.duyhien.apiweb.Responses.product.ProductResponse;
-import com.duyhien.apiweb.Services.product.IProductRedisService;
-import com.duyhien.apiweb.Services.product.IProductService;
+import com.duyhien.apiweb.Services.IProductRedisService;
+import com.duyhien.apiweb.Services.IProductService;
 import com.duyhien.apiweb.Utils.MessageKeys;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
@@ -25,8 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,26 +43,18 @@ public class ProductController {
     private final IProductService productService;
     private final LocalizationUtils localizationUtils;
     private final IProductRedisService productRedisService;
+
     private final SecurityUtils securityUtils;
+
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseObject> createProduct(
-            @Valid @RequestBody ProductDTO productDTO,
-            BindingResult result
-    ) throws Exception {
-        if(result.hasErrors()) {
-            List<String> errorMessages = result.getFieldErrors()
-                    .stream()
-                    .map(FieldError::getDefaultMessage)
-                    .toList();
-            return ResponseEntity.badRequest().body(
-                    ResponseObject.builder()
-                            .message(String.join("; ", errorMessages))
-                            .status(HttpStatus.BAD_REQUEST)
-                            .build()
-            );
+    public ResponseEntity<ResponseObject> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        ProductEntity newProduct = null;
+        try {
+            newProduct = productService.createProduct(productDTO);
+        } catch (Exception e) {
+            new InvalidParamException(e.getMessage());
         }
-        ProductEntity newProduct = productService.createProduct(productDTO);
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .message("Create new product successfully")
@@ -84,8 +75,7 @@ public class ProductController {
         if(files.size() > ProductImageEntity.MAXIMUM_IMAGES_PER_PRODUCT) {
             return ResponseEntity.badRequest().body(
                     ResponseObject.builder()
-                            .message(localizationUtils
-                                    .getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX_5))
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX_5))
                             .build()
             );
         }
@@ -244,3 +234,4 @@ public class ProductController {
                 .build());
     }
 }
+

@@ -1,11 +1,11 @@
 package com.duyhien.apiweb.Controllers;
 
 import com.duyhien.apiweb.Components.SecurityUtils;
-import com.duyhien.apiweb.DTO.CommentDTO;
+import com.duyhien.apiweb.DTO.Request.CommentDTO;
 import com.duyhien.apiweb.Entities.UserEntity;
 import com.duyhien.apiweb.Responses.ResponseObject;
 import com.duyhien.apiweb.Responses.comment.CommentResponse;
-import com.duyhien.apiweb.Services.comment.CommentService;
+import com.duyhien.apiweb.Services.Impl.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

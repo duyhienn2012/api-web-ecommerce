@@ -2,17 +2,15 @@ package com.duyhien.apiweb.Controllers;
 
 
 import com.duyhien.apiweb.Components.LocalizationUtils;
-import com.duyhien.apiweb.Components.converters.CategoryMessageConverter;
-import com.duyhien.apiweb.DTO.CategoryDTO;
+import com.duyhien.apiweb.DTO.Request.CategoryDTO;
 import com.duyhien.apiweb.Entities.CategoryEntity;
 import com.duyhien.apiweb.Responses.ResponseObject;
-import com.duyhien.apiweb.Services.category.CategoryService;
+import com.duyhien.apiweb.Services.Impl.CategoryService;
 import com.duyhien.apiweb.Utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -26,7 +24,6 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     private final LocalizationUtils localizationUtils;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -46,8 +43,6 @@ public class CategoryController {
 
         }
         CategoryEntity category = categoryService.createCategory(categoryDTO);
-        this.kafkaTemplate.send("insert-a-category", category);
-        this.kafkaTemplate.setMessageConverter(new CategoryMessageConverter());
         return ResponseEntity.ok().body(ResponseObject.builder()
                 .message("Create category successfully")
                 .status(HttpStatus.OK)
@@ -57,16 +52,17 @@ public class CategoryController {
 
     @GetMapping("")
     public ResponseEntity<ResponseObject> getAllCategories(
-            @RequestParam("page")     int page,
-            @RequestParam("limit")    int limit
+            @RequestParam(name = "PageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "PageSize", defaultValue = "20", required = false) int pageSize
     ) {
         List<CategoryEntity> categories = categoryService.getAllCategories();
-        this.kafkaTemplate.send("get-all-categories", categories);
         return ResponseEntity.ok(ResponseObject.builder()
                         .message("Get list of categories successfully")
                         .status(HttpStatus.OK)
                         .data(categories)
                 .build());
+        //Log
+//        return
     }
 
     @GetMapping("/{id}")
@@ -97,6 +93,8 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> deleteCategory(@PathVariable Long id) throws Exception{
         categoryService.deleteCategory(id);
+
+
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .status(HttpStatus.OK)

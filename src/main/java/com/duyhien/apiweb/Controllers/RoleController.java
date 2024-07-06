@@ -2,7 +2,7 @@ package com.duyhien.apiweb.Controllers;
 
 import com.duyhien.apiweb.Entities.RoleEnity;
 import com.duyhien.apiweb.Responses.ResponseObject;
-import com.duyhien.apiweb.Services.role.RoleService;
+import com.duyhien.apiweb.Services.Impl.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

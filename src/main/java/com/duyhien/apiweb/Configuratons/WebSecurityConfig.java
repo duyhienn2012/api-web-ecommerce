@@ -1,6 +1,6 @@
 package com.duyhien.apiweb.Configuratons;
 
-import com.duyhien.apiweb.Services.user.CustomOAuth2UserService;
+import com.duyhien.apiweb.Services.Impl.CustomOAuth2UserService;
 import com.duyhien.apiweb.filters.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

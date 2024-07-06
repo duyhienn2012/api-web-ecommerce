@@ -1,12 +1,12 @@
 package com.duyhien.apiweb.Controllers;
 
 import com.duyhien.apiweb.Components.LocalizationUtils;
-import com.duyhien.apiweb.DTO.OrderDetailDTO;
+import com.duyhien.apiweb.DTO.Request.OrderDetailDTO;
 import com.duyhien.apiweb.Entities.OrderDetailEntity;
 import com.duyhien.apiweb.Exceptions.DataNotFoundException;
 import com.duyhien.apiweb.Responses.ResponseObject;
 import com.duyhien.apiweb.Responses.order.OrderDetailResponse;
-import com.duyhien.apiweb.Services.orderdetails.OrderDetailService;
+import com.duyhien.apiweb.Services.Impl.OrderDetailService;
 import com.duyhien.apiweb.Utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

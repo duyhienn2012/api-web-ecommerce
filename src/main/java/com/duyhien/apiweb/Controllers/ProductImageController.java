@@ -3,8 +3,8 @@ package com.duyhien.apiweb.Controllers;
 
 import com.duyhien.apiweb.Entities.ProductImageEntity;
 import com.duyhien.apiweb.Responses.ResponseObject;
-import com.duyhien.apiweb.Services.product.ProductService;
-import com.duyhien.apiweb.Services.product.image.IProductImageService;
+import com.duyhien.apiweb.Services.Impl.ProductService;
+import com.duyhien.apiweb.Services.IProductImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

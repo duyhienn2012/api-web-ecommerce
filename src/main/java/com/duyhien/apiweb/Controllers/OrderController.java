@@ -1,11 +1,11 @@
 package com.duyhien.apiweb.Controllers;
 
 import com.duyhien.apiweb.Components.LocalizationUtils;
-import com.duyhien.apiweb.DTO.OrderDTO;
+import com.duyhien.apiweb.DTO.Request.OrderDTO;
 import com.duyhien.apiweb.Entities.OrderEntity;
 import com.duyhien.apiweb.Responses.ResponseObject;
 import com.duyhien.apiweb.Responses.order.OrderResponse;
-import com.duyhien.apiweb.Services.orders.IOrderService;
+import com.duyhien.apiweb.Services.IOrderService;
 import com.duyhien.apiweb.Utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
